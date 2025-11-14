@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Update Batch</title></head>
+<body>
+<h2>Update Batch</h2>
+<form id="updForm">
+  <label>Batch ID: <input name="id" required></label><br>
+  <label>Name: <input name="name"></label><br>
+  <label>Timing: <input name="timing"></label><br>
+  <label>Capacity: <input name="capacity" type="number"></label><br>
+  <button type="submit">Update</button>
+</form>
+
+<script>
+document.getElementById('updForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = new FormData(e.target);
+  const params = new URLSearchParams();
+  for (const [k,v] of form.entries()) if (v) params.append(k,v);
+  const id = form.get('id');
+  fetch('batches?id='+encodeURIComponent(id), {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: params.toString()
+  }).then(r => {
+    if (r.ok || r.status === 204) alert('Updated'); else alert('Update failed');
+  }).catch(err => alert('Error: '+err));
+});
+</script>
+</body>
+</html>
